@@ -1,45 +1,38 @@
-import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Backdrop, ModalContainer } from './Modal.styled';
+import { useEffect } from 'react';
 
-export class Modal extends Component {
-  static propTypes = {
-    image: PropTypes.string.isRequired,
-    offModal: PropTypes.func.isRequired,
-  };
-
-  componentDidMount() {
-    window.addEventListener('keydown', this.closeByEscape);
-    window.addEventListener('click', this.closeByClick);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.closeByEscape);
-    window.removeEventListener('click', this.closeByClick);
-  }
-
-  closeByEscape = e => {
-    if (e.code === 'Escape') {
-      this.props.offModal();
-    }
-  };
-
-  closeByClick = e => {
+export const Modal = ({ image, offModal }) => {
+  const closeByClick = e => {
     const backdrop = document.querySelector('.backdrop');
 
     if (backdrop === e.target) {
-      this.props.offModal();
+      offModal();
     }
   };
 
-  render() {
-    const { image } = this.props;
-    return (
-      <Backdrop className="backdrop" onClick={this.closeByClick}>
-        <ModalContainer className="modal">
-          <img src={image} alt="Foto" />
-        </ModalContainer>
-      </Backdrop>
-    );
-  }
-}
+  useEffect(() => {
+    const closeByEscape = e => {
+      if (e.code === 'Escape') {
+        offModal();
+      }
+    };
+    window.addEventListener('keydown', closeByEscape);
+    return () => {
+      window.removeEventListener('keydown', closeByEscape);
+    };
+  }, [offModal]);
+
+  return (
+    <Backdrop className="backdrop" onClick={closeByClick}>
+      <ModalContainer className="modal">
+        <img src={image} alt="Foto" />
+      </ModalContainer>
+    </Backdrop>
+  );
+};
+
+Modal.propTypes = {
+  image: PropTypes.string.isRequired,
+  offModal: PropTypes.func.isRequired,
+};
