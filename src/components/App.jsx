@@ -44,12 +44,15 @@ export const App = () => {
         toast.error('Щось пішло не так, спробуйте ще раз!');
       } finally {
         setIsLoading(false);
-			}
-			onSmoothScroll();
+      }
     }
 
-		getImages();
+    getImages();
   }, [saerchQuery, page]);
+
+  useEffect(() => {
+    onSmoothScroll();
+  }, [images]);
 
   const handleSubmit = term => {
     setSaerchQuery(term);
