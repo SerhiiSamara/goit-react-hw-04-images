@@ -30,8 +30,6 @@ export const App = () => {
         setError(null);
         setIsloadMore(true);
         const searchImages = await fetchImages(saerchQuery, page);
-        console.log('searchQuery: ', saerchQuery);
-        console.log('searchImages: ', searchImages);
         const searchImagesFormated = searchImages.map(searchImage => ({
           id: searchImage.id,
           webformatURL: searchImage.webformatURL,
@@ -46,14 +44,11 @@ export const App = () => {
         toast.error('Щось пішло не так, спробуйте ще раз!');
       } finally {
         setIsLoading(false);
-      }
+			}
+			onSmoothScroll();
     }
 
-    getImages();
-
-    if (page > 1) {
-      onSmoothScroll();
-    }
+		getImages();
   }, [saerchQuery, page]);
 
   const handleSubmit = term => {
